@@ -43,6 +43,7 @@ const defineHeritageSchema = () => {
                     initial: [...ATTRIBUTE_STRINGS],
                     readonly: true,
                 }),
+                allowed: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
                 selected: new fields.ArrayField(new fields.StringField(), {
                     required: true,
                     initial: [],

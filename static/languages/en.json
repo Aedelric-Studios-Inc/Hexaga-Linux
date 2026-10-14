@@ -52,10 +52,15 @@
             "label": "Hitpoints",
             "shortLabel": "HP"
         },
+        "level": {
+            "label": "Level",
+            "specificLevel": "Level {level}"
+        },
         "ruleElements": {
             "FlatModifier": { "label": "Flat Modifier" }
         },
         "skills": {
+            "label": "Skills",
             "brawn": { "label": "Brawn" },
             "striking": { "label": "Striking" },
             "menace": { "label": "Menace" },

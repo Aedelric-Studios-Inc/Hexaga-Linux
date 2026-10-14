@@ -88,7 +88,7 @@ export class SkillStatistic extends Statistic {
     }
 
     get attributeRank() {
-        return this.actor.system.attributes[this.attribute as keyof typeof this.actor.system.attributes]?.rank;
+        return this.actor.system.attributes[this.attribute as keyof typeof this.actor.system.attributes]?.total;
     }
 
     get baseRank() {
@@ -181,6 +181,9 @@ export class HitpointStatistic extends BaseStatistic<ActorHex> {
         super(actor, data);
 
         this.domains = Array.from(new Set(["all", "max-hp", data.slug]));
+
+        // Make sure HP is within bounds
+        this.actor.update({ system: { intrinsic: { hp: { current: Math.clamp(this.current, 0, this.max) } } } });
     }
 
     get base() {

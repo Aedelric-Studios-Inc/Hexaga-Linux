@@ -25,7 +25,7 @@ export class ProfessionData extends ItemHexData<ProfessionSchema> {
         }
 
         // Only one Profession can be on a hero
-        if (actor && actor.itemTypes.heritage.length >= 1) {
+        if (actor && actor.itemTypes.profession.length >= 1) {
             ui.notifications.warn("Only one Profession can be applied to a hero.");
             return false;
         }

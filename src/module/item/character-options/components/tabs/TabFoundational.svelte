@@ -14,8 +14,10 @@
                 titleKey="attributes"
                 localizationPrefix="hexaga"
                 path="system.improvements.attributes.selected"
-                choices={improvements.attributes.choices}
-                selected={improvements.attributes.selected}
+                countPath="system.improvements.attributes.allowed"
+                choices={improvements.attributes.choices ?? []}
+                selected={improvements.attributes.selected ?? []}
+                amount={improvements.attributes.allowed ?? 0}
             />
         {/if}
         {#if item.type === "profession"}
@@ -24,8 +26,10 @@
                 titleKey="skills"
                 localizationPrefix="hexaga"
                 path="system.improvements.skills.selected"
-                choices={improvements.skills.choices}
-                selected={improvements.skills.selected}
+                countPath="system.improvements.skills.allowed"
+                choices={improvements.skills.choices ?? []}
+                selected={improvements.skills.selected ?? []}
+                amount={improvements.skills.allowed ?? 0}
             />
         {/if}
     </div>

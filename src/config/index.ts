@@ -31,13 +31,21 @@ const HEXAGA_CHARACTER_ATTRIBUTES = {
     ego: { label: "hexaga.attributes.ego.label", group: "personality" },
 };
 
-const LEVEL_IMPROVEMENTS = {
-    1: { attributePoints: 5, skillPoints: 6, aspectPoints: 3 },
-    2: { attributePoints: 5, skillPoints: 6, aspectPoints: 5 },
-    3: { attributePoints: 5, skillPoints: 8, aspectPoints: 7 },
-    4: { attributePoints: 5, skillPoints: 8, aspectPoints: 9 },
-    5: { attributePoints: 10, skillPoints: 10, aspectPoints: 11 },
-};
+const LEVEL_IMPROVEMENTS = [
+    null,
+    { attributes: 5, skills: 6, aspects: 3 },
+    { attributes: 0, skills: 0, aspects: 2 },
+    { attributes: 0, skills: 2, aspects: 2 },
+    { attributes: 0, skills: 0, aspects: 2 },
+    { attributes: 5, skills: 2, aspects: 2 },
+];
+
+const MAX_RANK_BY_LEVEL = [
+    { level: 1, cap: 2 },
+    { level: 5, cap: 3 },
+    { level: 10, cap: 4 },
+    { level: 15, cap: 5 },
+];
 
 const RULE_ELEMENTS: Record<string, RuleElementConstructor> = { FlatModifier: FlatModifier };
 
@@ -45,5 +53,6 @@ export const HEXAGACONFIG = {
     skills: HEXAGA_CHARACTER_SKILLS,
     attributes: HEXAGA_CHARACTER_ATTRIBUTES,
     improvements: LEVEL_IMPROVEMENTS,
+    maxRank: MAX_RANK_BY_LEVEL,
     ruleElements: RULE_ELEMENTS,
 };

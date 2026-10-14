@@ -1,6 +1,6 @@
 import { HEXAGACONFIG } from "../../../config/index.ts";
 import { HitpointStatistic, ResistanceValueStatistic, SkillStatistic } from "../../system/statistic/statistic.ts";
-import { ATTRIBUTE_GROUP_MAPS } from "../foundation.ts";
+import { ATTRIBUTE_GROUP_MAPS, ATTRIBUTE_STRINGS, SKILL_STRINGS } from "../foundation.ts";
 import { ActorHexData } from "../base/baseActorData.ts";
 import { ItemHex } from "../../item/base/base.ts";
 
@@ -9,12 +9,12 @@ export class HeroData extends ActorHexData<HeroSchema> {
         return defineHeroSchema();
     }
 
-    get unspentAttributePoints() {
-        return this.improvements.abilities.allowed - this.improvements.abilities.used;
-    }
-
     get heritage() {
         return this.parent.itemTypes.heritage[0] ?? null;
+    }
+
+    get profession() {
+        return this.parent.itemTypes.profession[0] ?? null;
     }
 
     override prepareBaseData(): void {
@@ -33,7 +33,7 @@ export class HeroData extends ActorHexData<HeroSchema> {
             });
             if (!groupPair) throw new Error(`No matching group found for ${a}`);
             this.attributes[a].group = groupPair;
-            this.attributes[a].rank = 0;
+            //this.attributes[a].rank = 0;
         }
     }
 
@@ -45,7 +45,8 @@ export class HeroData extends ActorHexData<HeroSchema> {
         this.parent.rv = {};
         this.parent.intrinsics = {};
 
-        this.options.heritage = this.parent.itemTypes.heritage[0] ?? null;
+        this.options.heritage = this.heritage ?? null;
+        this.options.profession = this.profession ?? null;
 
         // Create Skill Statistics
         const skillsConfig = CONFIG.hexaga?.skills ?? HEXAGACONFIG.skills;
@@ -54,7 +55,7 @@ export class HeroData extends ActorHexData<HeroSchema> {
                 this.parent.skills[skill] = new SkillStatistic(this.parent, {
                     slug: skill,
 
-                    rank: this.skillData[skill as keyof typeof this.skillData].rank,
+                    rank: this.skills[skill as keyof typeof this.skills].rank,
                 }).getTraceData();
             }
         }
@@ -104,44 +105,24 @@ export class HeroData extends ActorHexData<HeroSchema> {
         });
     }
 
-    prepareAttributes(): void {
-        // Initialize the base breakdown
-        for (const attribute of Object.keys(this.attributes)) {
-            const attr = this.attributes[attribute as keyof typeof this.attributes];
-            attr.breakdown.push(`${attr.rank} (Base)`);
-        }
-
-        for (const skill of Object.keys(this.skillData)) {
-            const skl = this.skillData[skill as keyof typeof this.skillData];
-            skl.breakdown.push(`${skl.rank} (Base)`);
-        }
-
-        // Handle attribute modifiers
-        const heritage = this.parent.items.find((i) => i.type === "heritage");
-        if (heritage) {
-            const selection = heritage.getFlag("hexaga", "selections") as keyof typeof this.attributes;
-            if (selection && this.attributes[selection]) {
-                this.attributes[selection].mod++;
-                // Add heritage to the breakdown
-                this.attributes[selection].breakdown.push("1 (Heritage)");
+    prepareBaselineStats(): void {
+        const attributes = this.attributes;
+        const skills = this.skills;
+        for (const improvement of this.improvements) {
+            for (const attr in attributes) {
+                if (improvement.attributes)
+                    attributes[attr as keyof typeof attributes].rank += (improvement.attributes ?? []).reduce(
+                        (total, current) => (current === attr ? total + 1 : total),
+                        0,
+                    );
             }
-        }
-
-        // Handle base skill modifiers
-        const profession = this.parent.items.find((i) => i.type === "profession");
-        if (profession) {
-            const selection = profession.getFlag("hexaga", "selections") as keyof typeof this.skillData;
-            if (selection && this.skillData[selection]) {
-                this.skillData[selection].mod++;
-                // Add profession to the breakdown
-                this.skillData[selection].breakdown.push("1 (Heritage)");
+            for (const skl in skills) {
+                if (improvement.skills)
+                    skills[skl as keyof typeof skills].rank += (improvement.skills ?? []).reduce(
+                        (total, current) => (current === skl ? total + 1 : total),
+                        0,
+                    );
             }
-        }
-
-        // Get the total value for all attributes
-        for (const attribute of Object.keys(this.attributes)) {
-            const attr = this.attributes[attribute as keyof typeof this.attributes];
-            attr.total = attr.rank + attr.mod;
         }
     }
 }
@@ -151,18 +132,24 @@ const defineHeroSchema = () => {
         ...ActorHexData.defineSchema(),
         level: new fields.NumberField({ nullable: false, required: true, initial: 1 }),
         options: new fields.SchemaField({
-            heritage: new fields.EmbeddedDataField(ItemHex, { nullable: true, persisted: false }), // this thing is a problem right now
+            heritage: new fields.EmbeddedDataField(ItemHex, { nullable: true, persisted: false }),
+            profession: new fields.EmbeddedDataField(ItemHex, { nullable: true, persisted: false }),
         }),
-        improvements: new fields.SchemaField({
-            abilities: new fields.SchemaField({
-                used: new fields.NumberField({ nullable: false, required: true, initial: 0 }),
-                allowed: new fields.NumberField({ nullable: false, required: true, initial: 5 }),
+        improvements: new fields.ArrayField(
+            new fields.SchemaField({
+                source: new fields.StringField({ required: true, nullable: false }),
+                attributes: new fields.ArrayField(new fields.StringField(), {
+                    initial: [],
+                    required: false,
+                    nullable: true,
+                }),
+                skills: new fields.ArrayField(new fields.StringField(), {
+                    initial: [],
+                    required: false,
+                    nullable: true,
+                }),
             }),
-            skills: new fields.SchemaField({
-                used: new fields.NumberField({ nullable: false, required: true, initial: 0 }),
-                allowed: new fields.NumberField({ nullable: false, required: true, initial: 6 }),
-            }),
-        }),
+        ),
     };
 };
 

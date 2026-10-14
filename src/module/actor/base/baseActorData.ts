@@ -8,7 +8,7 @@ export class ActorHexData<Schema extends ActorHexSchema> extends foundry.abstrac
 
 const defineAttributeSchema = () => {
     return {
-        rank: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        rank: new fields.NumberField({ required: true, nullable: false, initial: 0, persistent: false }),
         label: new fields.StringField({ required: true }),
         group: new fields.StringField({ required: true }),
         mod: new fields.NumberField({ required: true, initial: 0, nullable: false, persistent: false }),
@@ -50,7 +50,7 @@ const defineActorSchema = () => {
                 current: new fields.NumberField({ required: true, nullable: false, initial: 10 }),
             }),
         }),
-        skillData: new fields.SchemaField({
+        skills: new fields.SchemaField({
             brawn: new fields.SchemaField(defineSkillSchema()),
             striking: new fields.SchemaField(defineSkillSchema()),
             menace: new fields.SchemaField(defineSkillSchema()),
