@@ -32,6 +32,7 @@ export abstract class RuleElement<TConfig extends RuleElementConfig = RuleElemen
         if (!this.actor) return false;
 
         const rollOptions = this.actor.getRollOptions();
+        console.log(rollOptions);
 
         return Predicate.test(this.data.predicate, rollOptions);
     }

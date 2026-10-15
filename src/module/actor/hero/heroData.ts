@@ -3,7 +3,6 @@ import { HitpointStatistic, ResistanceValueStatistic, SkillStatistic } from "../
 import { ATTRIBUTE_GROUP_MAPS, ATTRIBUTE_STRINGS, SKILL_STRINGS } from "../foundation.ts";
 import { ActorHexData } from "../base/baseActorData.ts";
 import { ItemHex } from "../../item/base/base.ts";
-import { prepareHitpointRollOptions } from "../helpers.ts";
 
 export class HeroData extends ActorHexData<HeroSchema> {
     static override defineSchema(): HeroSchema {
@@ -52,21 +51,21 @@ export class HeroData extends ActorHexData<HeroSchema> {
         this.options.profession = this.profession ?? null;
 
         // Create Skill Statistics
-        for (const rule of this.parent.rules) {
-            rule.onPrepareDerivedData();
-        }
-
         const skillsConfig = CONFIG.hexaga?.skills ?? HEXAGACONFIG.skills;
         if (skillsConfig) {
             for (const [skill, _config] of Object.entries(skillsConfig)) {
                 this.parent.skills[skill] = new SkillStatistic(this.parent, {
                     slug: skill,
                     rank: this.skills[skill as keyof typeof this.skills].rank,
-                }).getTraceData();
+                });
             }
         }
 
         this.prepareNumericRollOptions();
+
+        for (const rule of this.parent.rules) {
+            rule.onPrepareDerivedData();
+        }
 
         const allDomainModifiers = this.parent.synthetics.modifiers["all"] ?? [];
 
@@ -111,8 +110,6 @@ export class HeroData extends ActorHexData<HeroSchema> {
             label: "hexaga.hitpoints.label",
             slug: "hp",
         });
-
-        prepareHitpointRollOptions(this.parent);
     }
 
     prepareBaselineStats(): void {

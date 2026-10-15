@@ -1,6 +1,11 @@
 import { RuleElement } from "../../system/ruleElement/base.ts";
 import { RulesEngine } from "../../system/ruleElement/rulesEngine.ts";
-import { HitpointStatistic, ResistanceValueStatistic, SkillTraceData } from "../../system/statistic/statistic.ts";
+import {
+    HitpointStatistic,
+    ResistanceValueStatistic,
+    SkillStatistic,
+    SkillTraceData,
+} from "../../system/statistic/statistic.ts";
 import { ActorSynthetics } from "../synthetics.ts";
 
 export class ActorHex<SubType extends Actor.SubType = Actor.SubType> extends Actor<SubType> {
@@ -134,4 +139,4 @@ export class ActorHex<SubType extends Actor.SubType = Actor.SubType> extends Act
     }
 }
 
-type SkillStatisticRecord = Record<string, SkillTraceData>;
+type SkillStatisticRecord = Record<string, SkillStatistic>;
