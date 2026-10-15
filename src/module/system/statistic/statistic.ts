@@ -183,7 +183,7 @@ export class HitpointStatistic extends BaseStatistic<ActorHex> {
         this.domains = Array.from(new Set(["all", "max-hp", data.slug]));
 
         // Make sure HP is within bounds
-        this.actor.update({ system: { intrinsic: { hp: { current: Math.clamp(this.current, 0, this.max) } } } });
+        this.actor.system.updateSource({ intrinsic: { hp: { current: Math.clamp(this.current, 0, this.max) } } });
     }
 
     get base() {

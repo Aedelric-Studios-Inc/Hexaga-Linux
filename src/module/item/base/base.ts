@@ -3,6 +3,24 @@ import { RuleElement } from "../../system/ruleElement/base.ts";
 export class ItemHex<SubType extends Item.SubType = Item.SubType> extends Item<SubType> {
     declare runtimeRules: RuleElement[];
 
+    protected override async _preCreate(
+        data: Item.CreateData,
+        options: Item.Database.PreCreateOptions,
+        user: User.Stored,
+    ): Promise<boolean | void> {
+        const allowed = await super._preCreate(data, options, user);
+        if (allowed === false) return false;
+
+        if (!this.system.slug) {
+            try {
+                const update = { slug: this.name.slugify() };
+                await this.system.updateSource(update);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+
     override prepareDerivedData(): void {
         super.prepareDerivedData();
         this.runtimeRules = [];

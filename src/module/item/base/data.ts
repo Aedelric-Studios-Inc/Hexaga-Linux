@@ -10,6 +10,7 @@ const defineItemSchema = () => {
     return {
         description: new fields.HTMLField(),
         rules: new fields.ArrayField(new fields.EmbeddedDataField(RuleElementData), { required: true, initial: [] }),
+        slug: new fields.StringField({ required: true, nullable: false, initial: "" }),
     };
 };
 

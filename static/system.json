@@ -14,7 +14,12 @@
     "esmodules": ["hexaga.mjs"],
     "documentTypes": {
         "Actor": { "hero": {} },
-        "Item": { "heritage": { "htmlFields": ["description"] }, "profession": { "htmlFields": ["description"] } }
+        "Item": {
+            "heritage": { "htmlFields": ["description"] },
+            "profession": { "htmlFields": ["description"] },
+            "aspect": { "htmlFields": ["description"] },
+            "aspectNode": { "htmlFields": ["description"] }
+        }
     },
     "languages": [
         {

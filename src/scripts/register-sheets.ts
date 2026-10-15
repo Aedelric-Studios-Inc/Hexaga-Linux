@@ -5,7 +5,7 @@ const dsc = foundry.applications.apps.DocumentSheetConfig;
 export function registerSheets(): void {
     dsc.registerSheet(Item, "hexaga", ItemSheetHex, {
         label: "Option",
-        types: ["heritage", "profession"],
+        types: ["heritage", "profession", "aspect", "aspectNode"],
         makeDefault: true,
     });
 

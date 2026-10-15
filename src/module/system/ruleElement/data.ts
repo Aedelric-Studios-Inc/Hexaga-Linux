@@ -23,12 +23,8 @@ const defineRuleElementSchema = () => {
             choices: ["beforeDerived", "derived"],
             initial: "derived",
         }),
-
-        value: new fields.NumberField({ required: false, nullable: true }),
-        target: new fields.StringField({ required: false, nullable: true, initial: "" }),
-
-        // Choice Rule Element
-        choices: new fields.ArrayField(new fields.StringField(), { required: false, nullable: true }),
+        predicate: new fields.ArrayField(new fields.ObjectField(), { required: true, initial: [] }),
+        config: new fields.ObjectField({ required: true, initial: {} }),
     };
 };
 

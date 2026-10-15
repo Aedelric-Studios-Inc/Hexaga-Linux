@@ -18,7 +18,6 @@ export class ProfessionData extends ItemHexData<ProfessionSchema> {
 
         // Profession can only be placed on a hero actor
         const actor = this.parent.actor;
-        console.log(data, options, user);
         if (this.parent.isEmbedded && (!actor || actor.type !== "hero")) {
             ui.notifications.warn("Profession can only be placed on a hero actor.");
             return false;
@@ -28,6 +27,15 @@ export class ProfessionData extends ItemHexData<ProfessionSchema> {
         if (actor && actor.itemTypes.profession.length >= 1) {
             ui.notifications.warn("Only one Profession can be applied to a hero.");
             return false;
+        }
+    }
+
+    prepareActorData() {
+        const actor = this.parent.actor;
+        const slug = this.slug ?? this.parent.name.slugify();
+
+        if (actor) {
+            actor.system.rollOptions.all[`self:profession:${slug}`] = true;
         }
     }
 }

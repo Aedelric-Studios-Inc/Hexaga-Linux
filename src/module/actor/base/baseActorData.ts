@@ -1,6 +1,8 @@
 import { ActorHex } from "./baseActor.ts";
 
 export class ActorHexData<Schema extends ActorHexSchema> extends foundry.abstract.TypeDataModel<Schema, ActorHex> {
+    public rollOptions: Record<string, Record<string, boolean>> = {};
+
     static override defineSchema(): ActorHexSchema {
         return defineActorSchema();
     }

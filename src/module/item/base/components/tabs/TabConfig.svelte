@@ -11,8 +11,7 @@
     async function addRuleElement() {
         const placeholder = {
             domains: ["all"],
-            label: `${item.name} ${ruleType}`,
-            target: "",
+            label: `${item.type}: ${item.name}`,
             key: ruleType,
             slug: item.name.slugify(),
         };

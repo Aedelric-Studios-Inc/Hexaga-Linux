@@ -9,6 +9,8 @@ import "./styles/hexaga.scss";
 import { HEXAGACONFIG } from "./config/index.ts";
 import { ActorHex } from "./module/actor/base/baseActor.ts";
 import { ProfessionData } from "./module/item/character-options/profession/data.ts";
+import { AspectData } from "./module/item/character-options/aspect/aspectData.ts";
+import { AspectNodeData } from "./module/item/character-options/aspect/aspectNodeData.ts";
 
 Hooks.on("init", () => {
     registerSheets();
@@ -20,6 +22,8 @@ Hooks.on("init", () => {
     CONFIG.Actor.dataModels["hero"] = HeroData;
     CONFIG.Item.dataModels["heritage"] = HeritageData;
     CONFIG.Item.dataModels["profession"] = ProfessionData;
+    CONFIG.Item.dataModels["aspect"] = AspectData;
+    CONFIG.Item.dataModels["aspectNode"] = AspectNodeData;
 
     CONFIG.Actor.documentClass = ActorHex;
     CONFIG.Item.documentClass = ItemHex;

@@ -18,7 +18,6 @@ export class HeritageData extends ItemHexData<HeritageSchema> {
 
         // Heritage can only be placed on a hero actor
         const actor = this.parent.actor;
-        console.log(data, options, user);
         if (this.parent.isEmbedded && (!actor || actor.type !== "hero")) {
             ui.notifications.warn("Heritage can only be placed on a hero actor.");
             return false;
@@ -28,6 +27,15 @@ export class HeritageData extends ItemHexData<HeritageSchema> {
         if (actor && actor.itemTypes.heritage.length >= 1) {
             ui.notifications.warn("Only one Heritage can be applied to a hero.");
             return false;
+        }
+    }
+
+    prepareActorData() {
+        const actor = this.parent.actor;
+        const slug = this.slug ?? this.parent.name.slugify();
+
+        if (actor) {
+            actor.system.rollOptions.all[`self:heritage:${slug}`] = true;
         }
     }
 }

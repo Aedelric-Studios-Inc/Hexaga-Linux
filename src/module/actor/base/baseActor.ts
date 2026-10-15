@@ -1,5 +1,6 @@
+import { RuleElement } from "../../system/ruleElement/base.ts";
+import { RulesEngine } from "../../system/ruleElement/rulesEngine.ts";
 import { HitpointStatistic, ResistanceValueStatistic, SkillTraceData } from "../../system/statistic/statistic.ts";
-import { ATTRIBUTE_STRINGS } from "../foundation.ts";
 import { ActorSynthetics } from "../synthetics.ts";
 
 export class ActorHex<SubType extends Actor.SubType = Actor.SubType> extends Actor<SubType> {
@@ -8,6 +9,7 @@ export class ActorHex<SubType extends Actor.SubType = Actor.SubType> extends Act
     declare rv: Record<string, ResistanceValueStatistic>;
     declare intrinsics: Record<string, any>;
     declare hp: HitpointStatistic;
+    public rules: RuleElement[] = [];
 
     protected override async _preCreate(
         data: Actor.CreateData,
@@ -61,16 +63,30 @@ export class ActorHex<SubType extends Actor.SubType = Actor.SubType> extends Act
         }
     }
 
+    // We don't use Active Effects, make it not happen.
+    override applyActiveEffects(_phase?: unknown): void {}
+
+    override prepareBaseData(): void {
+        super.prepareBaseData();
+        this.system.rollOptions = { all: { [`self:type:${this.type}`]: true } };
+    }
+
     override prepareEmbeddedDocuments(): void {
         super.prepareEmbeddedDocuments();
 
-        this.system.prepareBaselineStats();
-        for (const attribute in this.system.attributes) {
-            const attr = attribute as keyof typeof this.system.attributes;
-            this.system.attributes[attr].total = this.system.attributes[attr].rank + this.system.attributes[attr].mod;
-        }
-
         this.synthetics = { modifiers: {} };
+        this.rules = [];
+
+        this.prepareActorItemData();
+
+        for (const item of this.items) {
+            const rules = RulesEngine.initialize(item);
+            this.rules.push(...rules);
+        }
+    }
+
+    override prepareDerivedData(): void {
+        super.prepareDerivedData();
     }
 
     // Incredibly simplified for the time being
@@ -86,7 +102,6 @@ export class ActorHex<SubType extends Actor.SubType = Actor.SubType> extends Act
         if (match) {
             const sign = match[1];
             const amount = Number(match[2]);
-            console.log(sign, amount);
 
             if (sign === "+") {
                 finalHp += amount;
@@ -99,6 +114,23 @@ export class ActorHex<SubType extends Actor.SubType = Actor.SubType> extends Act
         }
         finalHp = Math.clamp(finalHp, 0, this.hp.max);
         await this.update({ system: { intrinsic: { hp: { current: finalHp } } } });
+    }
+
+    prepareActorItemData() {
+        for (const item of this.items) {
+            item.system.prepareActorData?.();
+        }
+    }
+
+    getRollOptions(domains: string[] = []): string[] {
+        const rollOptions: string[] = [];
+        for (const domain of ["all", ...domains]) {
+            const actorRollOptions = this.system.rollOptions[domain] ?? {};
+            for (const option of Object.keys(actorRollOptions)) {
+                if (option) rollOptions.push(option);
+            }
+        }
+        return rollOptions;
     }
 }
 

@@ -1,11 +1,13 @@
 import { ItemHex } from "../../item/base/base.ts";
 import { Modifier } from "../modifier.ts";
+import { Predicate } from "../predicate/predicate.ts";
 import { RuleElementData } from "./data.ts";
+import { FlatModifierConfig } from "./flatModifier.ts";
 
-export abstract class RuleElement {
+export abstract class RuleElement<TConfig extends RuleElementConfig = RuleElementConfig> {
     constructor(
         public item: ItemHex,
-        public data: RuleElementData,
+        public data: RuleElementData & { config: TConfig },
     ) {}
 
     get actor() {
@@ -16,6 +18,8 @@ export abstract class RuleElement {
 
     generateSynthetics(modifier: Modifier): void {
         if (!this.actor) return;
+        if (!this.testPredicate()) return;
+
         for (const domain of this.data.domains) {
             if (!domain) continue;
 
@@ -23,4 +27,14 @@ export abstract class RuleElement {
             this.actor.synthetics.modifiers[domain].push(modifier);
         }
     }
+
+    testPredicate(): boolean {
+        if (!this.actor) return false;
+
+        const rollOptions = this.actor.getRollOptions();
+
+        return Predicate.test(this.data.predicate, rollOptions);
+    }
 }
+
+type RuleElementConfig = FlatModifierConfig;

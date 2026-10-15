@@ -3,6 +3,7 @@ import { HitpointStatistic, ResistanceValueStatistic, SkillStatistic } from "../
 import { ATTRIBUTE_GROUP_MAPS, ATTRIBUTE_STRINGS, SKILL_STRINGS } from "../foundation.ts";
 import { ActorHexData } from "../base/baseActorData.ts";
 import { ItemHex } from "../../item/base/base.ts";
+import { prepareHitpointRollOptions } from "../helpers.ts";
 
 export class HeroData extends ActorHexData<HeroSchema> {
     static override defineSchema(): HeroSchema {
@@ -21,6 +22,7 @@ export class HeroData extends ActorHexData<HeroSchema> {
         super.prepareBaseData();
 
         // Prepare Attributes
+        this.prepareBaselineStats();
         for (const attribute in this.attributes) {
             const a = attribute as keyof typeof this.attributes;
             this.attributes[a].label = `hexaga.attributes.${attribute}.label`;
@@ -33,7 +35,8 @@ export class HeroData extends ActorHexData<HeroSchema> {
             });
             if (!groupPair) throw new Error(`No matching group found for ${a}`);
             this.attributes[a].group = groupPair;
-            //this.attributes[a].rank = 0;
+            this.attributes[a].mod = 0;
+            this.attributes[a].total = this.attributes[a].rank;
         }
     }
 
@@ -49,16 +52,21 @@ export class HeroData extends ActorHexData<HeroSchema> {
         this.options.profession = this.profession ?? null;
 
         // Create Skill Statistics
+        for (const rule of this.parent.rules) {
+            rule.onPrepareDerivedData();
+        }
+
         const skillsConfig = CONFIG.hexaga?.skills ?? HEXAGACONFIG.skills;
         if (skillsConfig) {
             for (const [skill, _config] of Object.entries(skillsConfig)) {
                 this.parent.skills[skill] = new SkillStatistic(this.parent, {
                     slug: skill,
-
                     rank: this.skills[skill as keyof typeof this.skills].rank,
                 }).getTraceData();
             }
         }
+
+        this.prepareNumericRollOptions();
 
         const allDomainModifiers = this.parent.synthetics.modifiers["all"] ?? [];
 
@@ -103,6 +111,8 @@ export class HeroData extends ActorHexData<HeroSchema> {
             label: "hexaga.hitpoints.label",
             slug: "hp",
         });
+
+        prepareHitpointRollOptions(this.parent);
     }
 
     prepareBaselineStats(): void {
@@ -123,6 +133,23 @@ export class HeroData extends ActorHexData<HeroSchema> {
                         0,
                     );
             }
+        }
+    }
+
+    prepareNumericRollOptions() {
+        for (const attribute of ATTRIBUTE_STRINGS) {
+            const rank = this.attributes[attribute].total;
+            this.rollOptions.all[`${attribute}:rank:${rank}`] = true;
+        }
+
+        for (const skill of SKILL_STRINGS) {
+            const rank = this.parent.skills[skill].total;
+            this.rollOptions.all[`${skill}:rank:${rank}`] = true;
+        }
+
+        for (const aspect of this.parent.itemTypes.aspect ?? []) {
+            const count = aspect.system.pointsSpent;
+            this.rollOptions.all[`aspect:${aspect.system.slug}:count:${count}`] = true;
         }
     }
 }
