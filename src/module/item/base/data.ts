@@ -4,6 +4,12 @@ export class ItemHexData<Schema extends ItemHexSchema> extends foundry.abstract.
     static override defineSchema(): ItemHexSchema {
         return defineItemSchema();
     }
+
+    getRollOptions(prefix = this.parent.type): string[] {
+        const rollOptions = [`${prefix}:id:${this.parent.id}`, `${prefix}:${this.slug}`];
+
+        return rollOptions;
+    }
 }
 
 const defineItemSchema = () => {

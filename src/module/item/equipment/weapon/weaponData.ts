@@ -4,6 +4,27 @@ export class WeaponData extends ItemHexData<WeaponDataSchema> {
     static override defineSchema(): WeaponDataSchema {
         return defineWeaponSchema();
     }
+
+    override getRollOptions(prefix = this.parent.type) {
+        const rollOptions = super.getRollOptions(prefix);
+
+        const totalDmp = this.damagePool.reduce((total, current) => {
+            return (total += current.base);
+        }, 0);
+
+        rollOptions.push(...this.damagePool.map((d) => `${prefix}:damage:${d.damageType}`));
+
+        rollOptions.push(
+            ...Object.entries({
+                [`equipped`]: this.equipped,
+                [`equipped:id:${this.parent.id}`]: this.equipped,
+                [`total-dmp:${totalDmp}`]: true,
+            })
+                .filter(([_key, entry]) => entry === true)
+                .map(([_key, entry]) => `${prefix}:${entry}`),
+        );
+        return rollOptions;
+    }
 }
 
 const defineWeaponSchema = () => {

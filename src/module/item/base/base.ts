@@ -21,6 +21,10 @@ export class ItemHex<SubType extends Item.SubType = Item.SubType> extends Item<S
         }
     }
 
+    get slug() {
+        return this.system.slug;
+    }
+
     override prepareDerivedData(): void {
         super.prepareDerivedData();
         this.runtimeRules = [];
