@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     export let item;
 
     $: rules = item.system.rules ?? [];
@@ -50,11 +50,29 @@
             console.error("Error removing rule element", error);
         }
     }
+
+    async function updateSlug(event: Event) {
+        const target = event.currentTarget;
+
+        try {
+            await item.update({ "system.slug": target.value.slugify() });
+        } catch (error) {
+            console.error(`Error updating ${path} on ${item.name}`);
+        }
+    }
 </script>
 
 <section class="item-tab item-config">
+    <header class="flex-row">
+        <label class="margin-5" for="slug">Slug: </label><input
+            type="text"
+            value={item.system.slug}
+            id="slug"
+            on:change={(e) => updateSlug(e)}
+        />
+    </header>
     <div class="rules-scroll-box">
-        {#each rules as rule, index}
+        {#each rules as rule, index (rule)}
             <div class="title-box outline-thin margin-5" data-index={index}>
                 <span class="title pad-5">
                     {_loc(`hexaga.ruleElements.${rule.key}.label`)}
@@ -84,3 +102,14 @@
         </div>
     </div>
 </section>
+
+<style lang="scss">
+    header {
+        margin: 10px;
+    }
+    .flex-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+</style>

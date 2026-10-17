@@ -18,7 +18,9 @@
             "heritage": { "htmlFields": ["description"] },
             "profession": { "htmlFields": ["description"] },
             "aspect": { "htmlFields": ["description"] },
-            "aspectNode": { "htmlFields": ["description"] }
+            "aspectNode": { "htmlFields": ["description"] },
+            "weapon": { "htmlFields": ["description"] },
+            "armor": { "htmlFields": ["description"] }
         }
     },
     "languages": [

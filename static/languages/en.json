@@ -79,6 +79,37 @@
             "speech": { "label": "Speech" },
             "command": { "label": "Command" },
             "occult": { "label": "Occult" }
+        },
+        "weapon": {
+            "attackType": {
+                "label": "Type",
+                "ranged": "Ranged",
+                "melee": "Melee",
+                "magical": "Magical"
+            },
+            "attackSkill": {
+                "label": "Attack Skill"
+            },
+            "damagePool": {
+                "label": "Damage Pool",
+                "plural": "Damage Pools",
+                "add": "Add Damage Pool"
+            }
+        },
+        "damageTypes": {
+            "label": "Damage Type",
+            "labelPlural": "Damage Types",
+            "bludgeoning": "Bludgeoning",
+            "slashing": "Slashing",
+            "piercing": "Piercing",
+            "fire": "Fire",
+            "cold": "Cold",
+            "electric": "Electric",
+            "corrosive": "Corrosive"
+        },
+        "dice": {
+            "label": "Die",
+            "plural": "Dice"
         }
     },
     "TYPES": {
@@ -87,7 +118,11 @@
         },
         "Item": {
             "heritage": "Heritage",
-            "profession": "Profession"
+            "profession": "Profession",
+            "aspect": "Aspect",
+            "aspectNode": "Aspect Node",
+            "weapon": "Weapon",
+            "armor": "Armor"
         }
     }
 }

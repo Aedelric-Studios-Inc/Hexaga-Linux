@@ -1,3 +1,5 @@
+import { ATTACK_SKILLS, DAMAGE_TYPES } from "../module/item/equipment/weapon/weaponConfig.ts";
+import { ITEM_TYPES } from "../module/item/itemConfig.ts";
 import { FlatModifier } from "../module/system/ruleElement/flatModifier.ts";
 import { RuleElementConstructor } from "../module/system/ruleElement/types.ts";
 
@@ -55,4 +57,7 @@ export const HEXAGACONFIG = {
     improvements: LEVEL_IMPROVEMENTS,
     maxRank: MAX_RANK_BY_LEVEL,
     ruleElements: RULE_ELEMENTS,
+    damageTypes: DAMAGE_TYPES,
+    attackSkills: ATTACK_SKILLS,
+    itemTypes: ITEM_TYPES,
 };

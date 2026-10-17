@@ -11,6 +11,7 @@ import { ActorHex } from "./module/actor/base/baseActor.ts";
 import { ProfessionData } from "./module/item/character-options/profession/data.ts";
 import { AspectData } from "./module/item/character-options/aspect/aspectData.ts";
 import { AspectNodeData } from "./module/item/character-options/aspect/aspectNodeData.ts";
+import { WeaponData } from "./module/item/equipment/weapon/weaponData.ts";
 
 Hooks.on("init", () => {
     registerSheets();
@@ -20,10 +21,13 @@ Hooks.on("init", () => {
     CONFIG.hexaga = HEXAGACONFIG;
 
     CONFIG.Actor.dataModels["hero"] = HeroData;
-    CONFIG.Item.dataModels["heritage"] = HeritageData;
-    CONFIG.Item.dataModels["profession"] = ProfessionData;
-    CONFIG.Item.dataModels["aspect"] = AspectData;
-    CONFIG.Item.dataModels["aspectNode"] = AspectNodeData;
+    Object.assign(CONFIG.Item.dataModels, {
+        heritage: HeritageData,
+        profession: ProfessionData,
+        aspect: AspectData,
+        aspectNode: AspectNodeData,
+        weapon: WeaponData,
+    });
 
     CONFIG.Actor.documentClass = ActorHex;
     CONFIG.Item.documentClass = ItemHex;

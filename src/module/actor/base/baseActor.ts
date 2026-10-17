@@ -1,11 +1,6 @@
 import { RuleElement } from "../../system/ruleElement/base.ts";
 import { RulesEngine } from "../../system/ruleElement/rulesEngine.ts";
-import {
-    HitpointStatistic,
-    ResistanceValueStatistic,
-    SkillStatistic,
-    SkillTraceData,
-} from "../../system/statistic/statistic.ts";
+import { HitpointStatistic, ResistanceValueStatistic, SkillStatistic } from "../../system/statistic/statistic.ts";
 import { ActorSynthetics } from "../synthetics.ts";
 
 export class ActorHex<SubType extends Actor.SubType = Actor.SubType> extends Actor<SubType> {

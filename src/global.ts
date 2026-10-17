@@ -6,6 +6,7 @@ import { AspectData } from "./module/item/character-options/aspect/aspectData.ts
 import { AspectNodeData } from "./module/item/character-options/aspect/aspectNodeData.ts";
 import { HeritageData } from "./module/item/character-options/heritage/data.ts";
 import { ProfessionData } from "./module/item/character-options/profession/data.ts";
+import { WeaponData } from "./module/item/equipment/weapon/weaponData.ts";
 
 declare global {
     namespace globalThis {
@@ -51,6 +52,7 @@ declare module "fvtt-types/configuration" {
             profession: typeof ProfessionData;
             aspect: typeof AspectData;
             aspectNode: typeof AspectNodeData;
+            weapon: typeof WeaponData;
         };
     }
 }

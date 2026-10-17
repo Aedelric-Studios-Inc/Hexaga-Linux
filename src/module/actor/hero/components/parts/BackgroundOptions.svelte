@@ -85,6 +85,12 @@
                 <button
                     type="button"
                     on:click={() => {
+                        option.sheet.render({ force: true });
+                    }}><i class="fa-solid fa-pen-to-square"></i></button
+                >
+                <button
+                    type="button"
+                    on:click={() => {
                         removeOption(option);
                     }}><i class="fa-solid fa-trash"></i></button
                 >
