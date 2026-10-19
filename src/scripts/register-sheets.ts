@@ -1,4 +1,4 @@
-import { HeroSheet } from "../module/actor/hero/HeroSheet.ts";
+import { HeroSheet } from "../module/actor/hero/heroSheet.ts";
 import { ItemSheetHex } from "../module/item/base/sheet.ts";
 import { ITEM_TYPES } from "../module/item/itemConfig.ts";
 const dsc = foundry.applications.apps.DocumentSheetConfig;

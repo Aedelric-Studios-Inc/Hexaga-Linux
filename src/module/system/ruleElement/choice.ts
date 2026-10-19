@@ -5,6 +5,6 @@ export class ChoiceRuleElement extends RuleElement {
         if (this.data.phase !== "derived") return;
         if (!this.actor) return;
 
-        const choice = this.item.getFlag("hexaga", `choice.${this.data.slug}`) ?? undefined;
+      //  const choice = this.item.getFlag("hexaga", `choice.${this.data.slug}`) ?? undefined;
     }
 }
